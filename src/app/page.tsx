@@ -329,7 +329,7 @@ const TajaLanding: React.FC = () => {
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="/login">
+              <Button variant="accent" href="https://taja-platform.vercel.app/login">
                 Launch App
               </Button>
             </div>
@@ -361,7 +361,7 @@ const TajaLanding: React.FC = () => {
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="/login" className="w-full justify-center">
+              <Button variant="accent" href="https://taja-platform.vercel.app/login" className="w-full justify-center">
                 Launch App
               </Button>
             </motion.div>
@@ -585,7 +585,7 @@ const TajaLanding: React.FC = () => {
                 </ul>
                 <Button
                   variant={plan.featured ? 'accent' : 'primary'}
-                  href="/login"
+                  href="https://taja-platform.vercel.app/login"
                   className="w-full justify-center"
                 >
                   Launch App
