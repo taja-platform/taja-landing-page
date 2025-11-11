@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MapPin, Users, BarChart3, Shield, Camera, Zap, CheckCircle, ChevronDown, Menu, X, LucideIcon } from 'lucide-react';
+import Image from 'next/image';
 
 // Types
 interface CounterProps {
@@ -52,6 +53,7 @@ interface ScreenPreview {
   title: string;
   description: string;
   gradient: string;
+  image: string;
 }
 
 interface PricingPlan {
@@ -232,16 +234,19 @@ const TajaLanding: React.FC = () => {
       title: 'Agent Dashboard',
       description: 'Daily activity tracking and profile completion at a glance',
       gradient: 'from-emerald-500 to-emerald-600',
+      image: '/agent-dash.png',
     },
     {
       title: 'Shops Management',
       description: 'Powerful filters with map and table views for complete control',
       gradient: 'from-indigo-500 to-indigo-600',
+      image: '/admin-dash.png',
     },
     {
       title: 'Admin Overview',
       description: 'Real-time metrics and analytics panels for data-driven decisions',
       gradient: 'from-gray-700 to-gray-900',
+      image: '/shops.png',
     },
   ];
 
@@ -314,9 +319,9 @@ const TajaLanding: React.FC = () => {
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-lg shadow-md' : 'bg-transparent'
           }`}
       >
-        <div className="max-w-screen-xl mx-auto px-6 py-4">
+        <div className="max-w-screen-xl mx-auto px-6 py-1">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">TAJA</div>
+            <Image src="/taja-logo.png" alt="TAJA Logo" width={60} height={20} />
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
@@ -354,7 +359,7 @@ const TajaLanding: React.FC = () => {
               {navLinks.map((link) => (
                 <a
                   key={link}
-                  href={`#${link.toLowerCase().replace(' ', '-')}`}
+                  href={`#${link.toLowerCase().replaceAll(' ', '')}`}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
                 >
@@ -385,7 +390,7 @@ const TajaLanding: React.FC = () => {
                 TAJA helps teams register shops, track field activity, and view real-time analytics in one dashboard.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" href="/login">
+                <Button variant="primary" href="https://taja-platform.vercel.app/login">
                   Get Started
                 </Button>
                 <Button variant="secondary" href="#screens">
@@ -537,7 +542,13 @@ const TajaLanding: React.FC = () => {
                   <p className="text-white/90">{screen.description}</p>
                 </div>
                 <div className="h-64 bg-gray-100 flex items-center justify-center">
-                  <div className="text-gray-400 text-sm">Screen Preview</div>
+                  <Image
+                    src={screen.image}
+                    alt={`${screen.title} Screenshot`}
+                    width={"800"}
+                    height={400}
+                    className="object-contain h-full  "
+                  />
                 </div>
               </motion.div>
             ))}
@@ -623,7 +634,7 @@ const TajaLanding: React.FC = () => {
             <p className="text-xl text-gray-300 mb-8">
               Join teams already using TAJA to streamline field operations
             </p>
-            <Button variant="accent" href="/login" className="text-xl px-12 py-5">
+            <Button variant="accent" href="https://taja-platform.vercel.app/login" className="text-xl px-12 py-5">
               Open TAJA
             </Button>
           </motion.div>
