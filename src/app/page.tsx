@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { MapPin, Users, BarChart3, Shield, Camera, Zap, CheckCircle, ChevronDown, Menu, X, LucideIcon } from 'lucide-react';
+import { MapPin, TrendingUp, BarChart3, Target, Zap, Database, CheckCircle, ChevronDown, Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Types
 interface CounterProps {
   end: number;
   duration?: number;
+  suffix?: string;
 }
 
 interface ButtonProps {
@@ -25,7 +27,8 @@ interface SectionHeaderProps {
 }
 
 interface FeatureCardProps {
-  icon: LucideIcon;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: React.ComponentType<any>;
   title: string;
   description: string;
   delay?: number;
@@ -46,26 +49,18 @@ interface HowItWorksStep {
   step: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: React.ComponentType<any>;
 }
 
-interface ScreenPreview {
+interface UseCaseCard {
   title: string;
   description: string;
   gradient: string;
-  image: string;
-}
-
-interface PricingPlan {
-  name: string;
-  price: string;
-  description: string;
-  features: string[];
-  featured?: boolean;
 }
 
 // Animated Counter Component
-const Counter: React.FC<CounterProps> = ({ end, duration = 2 }) => {
+const Counter: React.FC<CounterProps> = ({ end, duration = 2, suffix = '' }) => {
   const [count, setCount] = useState<number>(0);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
@@ -91,16 +86,16 @@ const Counter: React.FC<CounterProps> = ({ end, duration = 2 }) => {
     return () => cancelAnimationFrame(animationFrame);
   }, [isInView, end, duration]);
 
-  return <span ref={ref}>{count.toLocaleString()}</span>;
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
 };
 
 // Reusable Components
 const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', href, className = '', onClick }) => {
-  const baseStyles = 'px-4 py-2 rounded-full font-semibold text-lg transition-all duration-300 inline-flex items-center gap-2';
+  const baseStyles = 'px-6 py-3 rounded-full font-semibold text-lg transition-all duration-300 inline-flex items-center gap-2';
   const variants = {
-    primary: 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl',
-    secondary: 'bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-50',
-    accent: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg hover:shadow-xl',
+    primary: 'bg-[#1f6b3a] text-white hover:bg-[#15512b] shadow-lg hover:shadow-xl',
+    secondary: 'bg-white text-gray-900 border-2 border-[#1f6b3a] hover:bg-gray-50',
+    accent: 'bg-[#1f6b3a] text-white hover:bg-[#15512b] shadow-lg hover:shadow-xl',
   };
 
   const Component = href ? 'a' : 'button';
@@ -138,8 +133,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, descriptio
     whileHover={{ y: -8, transition: { duration: 0.3 } }}
     className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300"
   >
-    <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
-      <Icon className="w-7 h-7 text-emerald-600" />
+    <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+      <Icon className="w-7 h-7 text-[#1f6b3a]" />
     </div>
     <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
     <p className="text-gray-600 leading-relaxed">{description}</p>
@@ -173,7 +168,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-6 flex items-center justify-between text-left hover:text-emerald-600 transition-colors"
+        className="w-full py-6 flex items-center justify-between text-left hover:text-[#1f6b3a] transition-colors"
       >
         <span className="text-lg font-semibold text-gray-900">{question}</span>
         <ChevronDown
@@ -196,7 +191,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
 };
 
 // Main Landing Page
-const TajaLanding: React.FC = () => {
+const RajaLanding: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [scrolled, setScrolled] = useState<boolean>(false);
 
@@ -206,109 +201,72 @@ const TajaLanding: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks: string[] = ['Features', 'How It Works', 'Screens', 'Pricing', 'FAQ', 'Contact'];
+  const navLinks: string[] = ['Features', 'How It Works', 'Who It\'s For', 'Contact'];
 
   const howItWorksSteps: HowItWorksStep[] = [
     {
       step: '01',
-      title: 'Agents Sign In',
-      description: 'Agents land on the portal with their personalized views and access controls.',
-      icon: Users,
+      title: 'Retailer Mapping',
+      description: 'Register and geo-locate retailers with accurate latitude and longitude to build clean coverage maps for every territory.',
+      icon: MapPin,
     },
     {
       step: '02',
-      title: 'Capture Shop Details',
-      description: 'Name, address, phone, state/LGA, photos, precise latitude/longitude, and description.',
-      icon: Camera,
+      title: 'Purchase Pattern Tracking',
+      description: 'Capture buying frequency, volumes, and product mix over time to understand what sells, where, and why.',
+      icon: TrendingUp,
     },
     {
       step: '03',
-      title: 'Review & Analyze',
-      description: 'Admins see counts, maps, and top regions in real-time dashboards.',
+      title: 'Sales Intelligence & Forecasting',
+      description: 'Analyze demand clusters to estimate sales per zone and extrapolate potential for similar or untapped regions.',
       icon: BarChart3,
     },
   ];
 
-  const screenPreviews: ScreenPreview[] = [
+  const useCases: UseCaseCard[] = [
     {
-      title: 'Agent Dashboard',
-      description: 'Daily activity tracking and profile completion at a glance',
-      gradient: 'from-emerald-500 to-emerald-600',
-      image: '/agent-dash.png',
+      title: 'FMCG Dealers',
+      description: 'Track coverage, performance, and retailer loyalty by territory.',
+      gradient: 'from-[#1f6b3a] to-[#15512b]',
     },
     {
-      title: 'Shops Management',
-      description: 'Powerful filters with map and table views for complete control',
-      gradient: 'from-indigo-500 to-indigo-600',
-      image: '/admin-dash.png',
+      title: 'Distributors',
+      description: 'Plan routes, allocate stock, and reduce under/over-serving of regions.',
+      gradient: 'from-green-600 to-green-700',
     },
     {
-      title: 'Admin Overview',
-      description: 'Real-time metrics and analytics panels for data-driven decisions',
-      gradient: 'from-gray-700 to-gray-900',
-      image: '/shops.png',
-    },
-  ];
-
-  const pricingPlans: PricingPlan[] = [
-    {
-      name: 'Starter',
-      price: '$49',
-      description: 'Perfect for small teams getting started with capture',
-      features: [
-        'Up to 10 agents',
-        'Basic analytics',
-        'Map & table views',
-        'Email support',
-      ],
+      title: 'Consumer Goods Brands',
+      description: 'Understand real market pull and plan smarter expansion.',
+      gradient: 'from-emerald-600 to-emerald-700',
     },
     {
-      name: 'Team',
-      price: '$149',
-      description: 'Advanced filters, exports, and priority support',
-      features: [
-        'Up to 50 agents',
-        'Advanced analytics',
-        'Data exports',
-        'Priority support',
-        'Custom filters',
-      ],
-      featured: true,
-    },
-    {
-      name: 'Enterprise',
-      price: 'Custom',
-      description: 'SSO, audit logs, custom analytics',
-      features: [
-        'Unlimited agents',
-        'Custom analytics',
-        'SSO & audit logs',
-        '24/7 support',
-        'Custom integrations',
-      ],
+      title: 'Field & Strategy Teams',
+      description: 'Use heatmaps and forecasts to guide sales execution.',
+      gradient: 'from-teal-600 to-teal-700',
     },
   ];
 
   const faqItems: FAQItemProps[] = [
     {
-      question: "What's the difference between agent and admin roles?",
-      answer: "Agents can add shops, update their profile, and view their activity. Admins have full access to manage all agents, shops, analytics, and system settings with role-aware controls.",
+      question: "How does RAJA capture retailer location data?",
+      answer: "RAJA uses GPS coordinates (latitude/longitude) to precisely map each retailer's location. This enables accurate territory coverage visualization and helps identify demand clusters across regions.",
     },
     {
-      question: "What data is captured for each shop?",
-      answer: "Each shop includes name, address, phone number, state/LGA, photos, precise GPS coordinates (latitude/longitude), description, owner information, and status tracking.",
+      question: "What purchase patterns does RAJA track?",
+      answer: "RAJA captures buying frequency, order volumes, product mix preferences, and temporal patterns. This data reveals what products move in specific areas, helping optimize inventory allocation and distribution planning.",
     },
     {
-      question: "How do I manage agent statuses and permissions?",
-      answer: "Admins can add, edit, activate, or deactivate agents through the Agents Management panel. All changes are logged and role-based permissions are automatically applied.",
+      question: "Can RAJA predict sales in new territories?",
+      answer: "Yes. RAJA analyzes demand clusters in existing territories and extrapolates potential for similar or untapped regions, helping you make data-driven expansion decisions.",
     },
     {
-      question: "Can I filter shops by region or LGA?",
-      answer: "Yes! The Shops Management view includes powerful filters for state, LGA, agent, status, and date ranges. You can view results in both map and table formats.",
+      question: "How does RAJA help reduce distribution inefficiency?",
+      answer: "By mapping actual retailer purchase patterns and location data, RAJA reveals under-served and over-served areas, enabling better route planning, stock allocation, and resource deployment.",
     },
     {
-      question: "How accurate is the GPS capture?",
-      answer: "TAJA uses device GPS for precise location capture. Agents can also adjust pins on the map to ensure accuracy before submitting shop data.",
+      question: "Who can access RAJA's analytics?",
+      answer: "RAJA provides role-specific dashboards for dealers, distributors, brands, and field teams. Each user sees relevant metrics and insights for their scope of operations.",
     },
   ];
 
@@ -316,26 +274,27 @@ const TajaLanding: React.FC = () => {
     <div className="bg-gray-50 overflow-x-hidden">
       {/* Navigation */}
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-lg shadow-md' : 'bg-transparent'
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-lg shadow-md' : 'bg-white lg:bg-transparent'
           }`}
       >
-        <div className="max-w-screen-xl mx-auto px-6 py-1">
+        <div className="max-w-screen-xl mx-auto px-6 py-2">
           <div className="flex items-center justify-between">
-            <Image src="/taja-logo.png" alt="TAJA Logo" width={60} height={20} />
-
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/raja-logo.png" alt="RAJA Logo" width={50} height={40} />
+            </Link>
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <a
                   key={link}
-                  href={`#${link.toLowerCase().replaceAll(' ', '')}`}
-                  className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
+                  href={`#${link.toLowerCase().replace(/\s+/g, '').replace("'", '')}`}
+                  className="text-gray-700 hover:text-[#1f6b3a] transition-colors font-medium"
                 >
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="https://taja-platform.vercel.app/login">
-                Launch App
+              <Button variant="accent" href="#contact">
+                Request Demo
               </Button>
             </div>
 
@@ -359,15 +318,15 @@ const TajaLanding: React.FC = () => {
               {navLinks.map((link) => (
                 <a
                   key={link}
-                  href={`#${link.toLowerCase().replaceAll(' ', '')}`}
+                  href={`#${link.toLowerCase().replace(/\s+/g, '').replace("'", '')}`}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
+                  className="text-gray-700 hover:text-[#1f6b3a] transition-colors font-medium"
                 >
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="https://taja-platform.vercel.app/login" className="w-full justify-center">
-                Launch App
+              <Button variant="accent" href="#contact" className="w-full justify-center">
+                Request Demo
               </Button>
             </motion.div>
           )}
@@ -375,7 +334,7 @@ const TajaLanding: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-screen-xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -383,19 +342,36 @@ const TajaLanding: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
+              <div className="inline-block bg-green-100 text-[#1f6b3a] px-4 py-2 rounded-full font-bold text-sm mb-6 border border-green-200">
+                Retail Access. Powered by Analytics.
+              </div>
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Map. Capture. Manage shops at scale.
+                Reach retailers. Predict demand. Grow smarter.
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                TAJA helps teams register shops, track field activity, and view real-time analytics in one dashboard.
+                RAJA is a location-based distribution intelligence platform that helps FMCG dealers, distributors, and brands understand where sales happen, how retailers buy, and where to expand next.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" href="https://taja-platform.vercel.app/login">
-                  Get Started
+                <Button variant="primary" href="#contact">
+                  Request a Demo
                 </Button>
-                <Button variant="secondary" href="#screens">
-                  See Live Dashboard
+                <Button variant="secondary" href="#howitworks">
+                  See How It Works
                 </Button>
+              </div>
+              <div className="flex flex-wrap gap-3 mt-6">
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">
+                  📍 Retailer mapping (GPS)
+                </span>
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">
+                  📊 Purchase pattern tracking
+                </span>
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">
+                  🗺️ Sales heatmaps
+                </span>
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-sm font-semibold text-gray-700">
+                  ⚡ Demand forecasting
+                </span>
               </div>
             </motion.div>
 
@@ -405,24 +381,39 @@ const TajaLanding: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="bg-white rounded-2xl shadow-2xl p-8"
             >
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-6 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl">
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">Total Shops</div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      <Counter end={12847} />
+              <div className="inline-block bg-green-100 text-[#15512b] px-3 py-1 rounded-full font-bold text-xs mb-4 border border-green-200">
+                What RAJA does
+              </div>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                RAJA connects the FMCG chain and captures real purchase + location data from the last mile. Each retailer interaction is geo-tagged and analyzed to reveal buying patterns, demand clusters, and sales potential across regions.
+              </p>
+              <div className="space-y-4">
+                <div className="p-4 bg-green-50 rounded-xl border border-green-100">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-[#1f6b3a] mt-0.5" />
+                    <div>
+                      <div className="font-bold text-gray-900 mb-1">Retailer mapping</div>
+                      <div className="text-sm text-gray-600">Latitude/Longitude captured per retailer</div>
                     </div>
                   </div>
-                  <MapPin className="w-12 h-12 text-emerald-600" />
                 </div>
-                <div className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl">
-                  <div>
-                    <div className="text-sm text-gray-600 mb-1">Total Agents</div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      <Counter end={284} />
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <div className="flex items-start gap-3">
+                    <BarChart3 className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-gray-900 mb-1">Sales intelligence</div>
+                      <div className="text-sm text-gray-600">Estimate sales per zone and territory</div>
                     </div>
                   </div>
-                  <Users className="w-12 h-12 text-indigo-600" />
+                </div>
+                <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                  <div className="flex items-start gap-3">
+                    <Target className="w-5 h-5 text-purple-600 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-gray-900 mb-1">Coverage planning</div>
+                      <div className="text-sm text-gray-600">Find under-served growth areas</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -431,71 +422,23 @@ const TajaLanding: React.FC = () => {
       </section>
 
       {/* Social Proof Stats */}
-      <section className="py-16 px-6 bg-white">
+      <section className="py-16 px-6 bg-white border-t border-b border-gray-200">
         <div className="max-w-screen-xl mx-auto">
           <div className="flex flex-wrap justify-center gap-6">
-            <StatPill label="Agents Onboarded" value="284+" delay={0} />
-            <StatPill label="Shops Captured" value="12.8K+" delay={0.1} />
-            <StatPill label="States Covered" value="36" delay={0.2} />
-            <StatPill label="Avg. Capture Time" value="< 3 min" delay={0.3} />
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 px-6">
-        <div className="max-w-screen-xl mx-auto">
-          <SectionHeader
-            title="Everything you need to manage field operations"
-            subtitle="Built for agents, optimized for admins"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={Users}
-              title="Agent Portal"
-              description="Profile, password updates, daily activity feed, and shop submissions in one place."
-              delay={0}
-            />
-            <FeatureCard
-              icon={MapPin}
-              title="Shops Management"
-              description="Filter by state/LGA, view on map/table, manage status and owners."
-              delay={0.1}
-            />
-            <FeatureCard
-              icon={Shield}
-              title="Agents Management"
-              description="Add, edit, and activate agents with role-aware controls."
-              delay={0.2}
-            />
-            <FeatureCard
-              icon={BarChart3}
-              title="Analytics Overview"
-              description="Shop density by state, top regions, and performance snapshots."
-              delay={0.3}
-            />
-            <FeatureCard
-              icon={Zap}
-              title="Fast Auth"
-              description="Role-based login routes agents vs admins automatically."
-              delay={0.4}
-            />
-            <FeatureCard
-              icon={Camera}
-              title="Media Capture"
-              description="Attach photos and precise GPS pins when adding shops."
-              delay={0.5}
-            />
+            <StatPill label="Territories Mapped" value="150+" delay={0} />
+            <StatPill label="Retailers Tracked" value="25K+" delay={0.1} />
+            <StatPill label="Demand Clusters Identified" value="500+" delay={0.2} />
+            <StatPill label="Distribution Efficiency Gain" value="32%" delay={0.3} />
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="howitworks" className="py-20 px-6 bg-white">
+      <section id="howitworks" className="py-20 px-6">
         <div className="max-w-screen-xl mx-auto">
           <SectionHeader
-            title="How It Works"
-            subtitle="Three simple steps to streamline your field operations"
+            title="How RAJA works"
+            subtitle="Three simple steps to turn distribution activity into actionable intelligence"
           />
           <div className="grid md:grid-cols-3 gap-12">
             {howItWorksSteps.map((item, index) => (
@@ -507,8 +450,8 @@ const TajaLanding: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 className="text-center"
               >
-                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <item.icon className="w-10 h-10 text-emerald-600" />
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <item.icon className="w-10 h-10 text-[#1f6b3a]" />
                 </div>
                 <div className="text-5xl font-bold text-gray-200 mb-4">{item.step}</div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
@@ -519,88 +462,130 @@ const TajaLanding: React.FC = () => {
         </div>
       </section>
 
-      {/* Screen Previews */}
-      <section id="screens" className="py-20 px-6">
+      {/* Features Section */}
+      <section id="features" className="py-20 px-6 bg-white border-t border-gray-200">
         <div className="max-w-screen-xl mx-auto">
           <SectionHeader
-            title="Built for the field, designed for efficiency"
-            subtitle="See TAJA in action"
+            title="Key features"
+            subtitle="Everything you need to see, measure, and scale your retail coverage"
           />
-          <div className="space-y-12">
-            {screenPreviews.map((screen, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={MapPin}
+              title="Retailer Profiles"
+              description="Location, purchase history, frequency, and product preferences for every retailer in your network."
+              delay={0}
+            />
+            <FeatureCard
+              icon={Target}
+              title="Coverage Maps"
+              description="Territory visualization with retailer clusters and density to identify gaps and opportunities."
+              delay={0.1}
+            />
+            <FeatureCard
+              icon={BarChart3}
+              title="Sales Heatmaps"
+              description="See high-performing zones and untapped opportunities at a glance across all regions."
+              delay={0.2}
+            />
+            <FeatureCard
+              icon={TrendingUp}
+              title="Demand Forecasting"
+              description="Predict potential sales by region using pattern-based estimation and comparable zone analysis."
+              delay={0.3}
+            />
+            <FeatureCard
+              icon={Database}
+              title="Data Quality Controls"
+              description="Standardized retailer identification and anomaly flags ensure clean, reliable intelligence."
+              delay={0.4}
+            />
+            <FeatureCard
+              icon={Zap}
+              title="Real-Time Dashboards"
+              description="Dealer and distributor views for performance tracking and strategic planning."
+              delay={0.5}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Who It's For */}
+      <section id="whoitsfor" className="py-20 px-6 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-screen-xl mx-auto">
+          <SectionHeader
+            title="Who RAJA is for"
+            subtitle="Built for teams that move fast-moving goods and need visibility at the last mile"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {useCases.map((useCase, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-2xl shadow-xl overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-2xl p-8 shadow-lg"
               >
-                <div className={`bg-gradient-to-r ${screen.gradient} p-8 text-white`}>
-                  <h3 className="text-3xl font-bold mb-2">{screen.title}</h3>
-                  <p className="text-white/90">{screen.description}</p>
-                </div>
-                <div className="h-64 bg-gray-100 flex items-center justify-center">
-                  <Image
-                    src={screen.image}
-                    alt={`${screen.title} Screenshot`}
-                    width={"800"}
-                    height={400}
-                    className="object-contain h-full  "
-                  />
-                </div>
+                <div className={`w-12 h-12 bg-gradient-to-br ${useCase.gradient} rounded-xl mb-4`}></div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{useCase.title}</h3>
+                <p className="text-gray-600">{useCase.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-20 px-6 bg-white">
+      {/* Why RAJA */}
+      <section className="py-20 px-6">
         <div className="max-w-screen-xl mx-auto">
           <SectionHeader
-            title="Simple, transparent pricing"
-            subtitle="Choose the plan that fits your team"
+            title="Why RAJA"
+            subtitle="Turn fragmented retail activity into structured intelligence"
           />
-          <div className="grid md:grid-cols-3 gap-8">
-            {pricingPlans.map((plan, index) => (
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                title: 'Know where your sales come from',
+                description: 'See demand hotspots and weak zones clearly with GPS-tagged purchase data.',
+              },
+              {
+                title: 'Identify under-served areas',
+                description: 'Uncover growth pockets competitors ignore using coverage gap analysis.',
+              },
+              {
+                title: 'Reduce guesswork',
+                description: 'Plan distribution with real retailer purchase patterns, not assumptions.',
+              },
+              {
+                title: 'Improve efficiency',
+                description: 'Align routes and inventory allocation with actual demand clusters.',
+              },
+              {
+                title: 'Expand smarter',
+                description: 'Extrapolate potential in new regions using comparable zones and patterns.',
+              },
+              {
+                title: 'Faster decisions',
+                description: 'Move from guesswork to data-driven insights in minutes, not weeks.',
+              },
+            ].map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`rounded-2xl p-8 ${plan.featured
-                  ? 'bg-gray-900 text-white shadow-2xl scale-105'
-                  : 'bg-white shadow-lg'
-                  }`}
+                className="bg-white rounded-xl p-6 shadow-md border border-gray-100"
               >
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <div className="text-4xl font-bold mb-4">
-                  {plan.price}
-                  {plan.price !== 'Custom' && <span className="text-lg font-normal">/mo</span>}
+                <div className="flex items-start gap-4">
+                  <CheckCircle className="w-6 h-6 text-[#1f6b3a] flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-gray-600">{item.description}</p>
+                  </div>
                 </div>
-                <p className={`mb-6 ${plan.featured ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {plan.description}
-                </p>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <CheckCircle
-                        className={`w-5 h-5 ${plan.featured ? 'text-emerald-400' : 'text-emerald-600'}`}
-                      />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  variant={plan.featured ? 'accent' : 'primary'}
-                  href="https://taja-platform.vercel.app/login"
-                  className="w-full justify-center"
-                >
-                  Launch App
-                </Button>
               </motion.div>
             ))}
           </div>
@@ -608,10 +593,10 @@ const TajaLanding: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20 px-6">
+      <section id="faq" className="py-20 px-6 bg-white border-t border-gray-200">
         <div className="max-w-3xl mx-auto">
           <SectionHeader title="Frequently Asked Questions" />
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-gray-50 rounded-2xl shadow-lg p-8">
             {faqItems.map((item, index) => (
               <FAQItem key={index} question={item.question} answer={item.answer} />
             ))}
@@ -620,7 +605,7 @@ const TajaLanding: React.FC = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-6 bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900">
+      <section className="py-20 px-6 bg-gradient-to-br from-[#1f6b3a] via-[#15512b] to-green-900">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -629,13 +614,13 @@ const TajaLanding: React.FC = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-5xl font-bold text-white mb-6">
-              Ready to capture your next 1,000 shops?
+              Ready to unlock data-driven distribution?
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join teams already using TAJA to streamline field operations
+            <p className="text-xl text-green-100 mb-8">
+              Request a walkthrough of RAJA{"'"}s analytics engine and retailer mapping system
             </p>
-            <Button variant="accent" href="https://taja-platform.vercel.app/login" className="text-xl px-12 py-5">
-              Open TAJA
+            <Button variant="secondary" href="#contact" className="text-xl px-12 py-5 bg-white hover:bg-gray-100">
+              Contact RAJA
             </Button>
           </motion.div>
         </div>
@@ -646,10 +631,25 @@ const TajaLanding: React.FC = () => {
         <div className="max-w-screen-xl mx-auto">
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>
-              <div className="text-2xl font-bold mb-4">TAJA</div>
+              <Image src="/raja-logo.png" alt="RAJA Logo" width={60} height={48} className="mb-4" />
               <p className="text-gray-400 leading-relaxed">
-                Field shop capture, analytics, and agent management — all in one dashboard.
+                Retail Access. Powered by Analytics. Location-based distribution intelligence for FMCG.
               </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <ul className="space-y-2">
+                <li>
+                  <a href="mailto:hello@raja.ng" className="text-gray-400 hover:text-white transition-colors">
+                    hello@raja.ng
+                  </a>
+                </li>
+                <li>
+                  <a href="https://wa.me/2348129901643" className="text-gray-400 hover:text-white transition-colors">
+                    +234 812 990 1643
+                  </a>
+                </li>
+              </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
@@ -657,7 +657,7 @@ const TajaLanding: React.FC = () => {
                 {navLinks.map((link) => (
                   <li key={link}>
                     <a
-                      href={`#${link.toLowerCase().replace(' ', '-')}`}
+                      href={`#${link.toLowerCase().replace(/\s+/g, '').replace("'", '')}`}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {link}
@@ -666,29 +666,9 @@ const TajaLanding: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Status
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Changelog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Docs
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 TAJA. All rights reserved.</p>
+            <p>&copy; 2025 RAJA. All rights reserved. — Retail Access. Powered by Analytics.</p>
           </div>
         </div>
       </footer>
@@ -696,4 +676,4 @@ const TajaLanding: React.FC = () => {
   );
 };
 
-export default TajaLanding;
+export default RajaLanding;
