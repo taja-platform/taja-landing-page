@@ -293,9 +293,9 @@ const RajaLanding: React.FC = () => {
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="#contact">
-                Request Demo
-              </Button>
+              <Link href="https://app.raja.ng/login" target="_blank" rel="noopener noreferrer">
+                <Button variant="accent" className='cursor-pointer'>Login</Button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -325,9 +325,9 @@ const RajaLanding: React.FC = () => {
                   {link}
                 </a>
               ))}
-              <Button variant="accent" href="#contact" className="w-full justify-center">
-                Request Demo
-              </Button>
+              <Link href="https://app.raja.ng/login" target="_blank" rel="noopener noreferrer">
+                <Button variant="accent" className='cursor-pointer'>Login</Button>
+              </Link>
             </motion.div>
           )}
         </div>
@@ -352,9 +352,9 @@ const RajaLanding: React.FC = () => {
                 RAJA is a location-based distribution intelligence platform that helps FMCG dealers, distributors, and brands understand where sales happen, how retailers buy, and where to expand next.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="primary" href="#contact">
-                  Request a Demo
-                </Button>
+                <Link href="https://app.raja.ng/login" target="_blank" rel="noopener noreferrer">
+                  <Button variant="accent" className='cursor-pointer'>Login</Button>
+                </Link>
                 <Button variant="secondary" href="#howitworks">
                   See How It Works
                 </Button>
