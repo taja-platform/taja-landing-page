@@ -351,9 +351,9 @@ const RajaLanding: React.FC = () => {
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 RAJA is a location-based distribution intelligence platform that helps FMCG dealers, distributors, and brands understand where sales happen, how retailers buy, and where to expand next.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-wrap gap-4">
                 <Link href="https://app.raja.ng/login" target="_blank" rel="noopener noreferrer">
-                  <Button variant="accent" className='cursor-pointer'>Login</Button>
+                  <Button variant="accent" className='cursor-pointer w-full'>Login</Button>
                 </Link>
                 <Button variant="secondary" href="#howitworks">
                   See How It Works
